@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<title>Financial Management — Programa MBA · EAFIT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --rb-900:#0E2742;
+    --rb-800:#143352;
+    --rb-700:#1A3A5C;
+    --rb-600:#234E78;
+    --rb-500:#2E6DA4;
+    --rb-300:#7AA4CC;
+    --rb-100:#D6E3F0;
+    --rb-50:#EBF2FA;
+    --gray-900:#1A2230;
+    --gray-700:#3F4A5C;
+    --gray-500:#6B7588;
+    --gray-300:#C9CFD8;
+    --gray-200:#E2E6EC;
+    --gray-100:#F0F2F6;
+    --white:#FFFFFF;
+    --accent:#2E5BD8;
+    --accent-soft:#9DB4F0;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#0a0a0a;font-family:'Inter',Helvetica,Arial,sans-serif;color:var(--gray-900);overflow-x:hidden;}
+
+  .stage-wrapper{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+  .stage{width:1920px;height:1080px;position:relative;transform-origin:center center;flex-shrink:0;}
+  .slide{position:absolute;inset:0;background:var(--white);color:var(--gray-900);overflow:hidden;font-size:34px;line-height:1.35;display:none;}
+  .slide.active{display:block;}
+
+  .t-eyebrow{font-size:24px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--rb-700);}
+  .t-eyebrow.on-dark{color:#9DB8D6;}
+  .t-eyebrow.gold{color:var(--accent);}
+  .t-title{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:88px;line-height:1.05;letter-spacing:-.01em;color:var(--gray-900);}
+  .t-h1{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:60px;line-height:1.1;letter-spacing:-.01em;color:var(--gray-900);}
+  .t-h2{font-family:'Fraunces',Georgia,serif;font-weight:500;font-size:48px;line-height:1.15;color:var(--gray-900);}
+  .t-sub{font-size:28px;line-height:1.4;color:var(--gray-700);font-weight:400;}
+  .t-body{font-size:26px;line-height:1.5;color:var(--gray-700);}
+  .t-small{font-size:22px;line-height:1.45;color:var(--gray-500);}
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+
+  .frame{width:100%;height:100%;padding:96px 120px 80px;display:flex;flex-direction:column;position:relative;}
+  .frame.dark{background:var(--rb-700);color:#fff;}
+  .frame.dark .t-title,.frame.dark .t-h1,.frame.dark .t-h2{color:#fff;}
+  .frame.dark .t-sub,.frame.dark .t-body{color:#C2D2E6;}
+  .frame.dark .t-small{color:#8FA1BB;}
+  .frame.tinted{background:var(--rb-50);}
+
+  .runner{position:absolute;top:42px;left:120px;right:120px;display:flex;justify-content:space-between;align-items:center;font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:var(--gray-500);font-weight:500;}
+  .frame.dark .runner{color:#8FA1BB;}
+  .runner .dot{width:8px;height:8px;background:var(--accent);display:inline-block;border-radius:50%;margin-right:14px;vertical-align:middle;}
+  .runner .logo-slot{display:flex;gap:10px;align-items:center;font-size:14px;letter-spacing:.14em;color:var(--gray-500);font-weight:600;}
+  .runner .logo-slot .lg{border:1px dashed var(--gray-300);padding:6px 12px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray-500);}
+  .frame.dark .runner .logo-slot .lg{border-color:rgba(255,255,255,.25);color:#9DB8D6;}
+
+  .foot{position:absolute;bottom:36px;left:120px;right:120px;display:flex;justify-content:space-between;align-items:center;font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-500);font-weight:500;}
+  .frame.dark .foot{color:#8FA1BB;}
+
+  .cover{background:var(--rb-700);color:#fff;padding:0;position:relative;overflow:hidden;width:100%;height:100%;}
+  .cover .bg{position:absolute;inset:0;background:radial-gradient(1200px 700px at 80% 20%,rgba(46,109,164,.45),transparent 60%),radial-gradient(900px 600px at 10% 90%,rgba(20,51,82,.7),transparent 70%),linear-gradient(180deg,#143352 0%,#1A3A5C 60%,#0E2742 100%);}
+  .cover .grid{position:absolute;inset:0;background-image:linear-gradient(to right,rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.05) 1px,transparent 1px);background-size:120px 120px;mask-image:linear-gradient(180deg,transparent 0%,#000 30%,#000 80%,transparent 100%);}
+  .cover .gold-shape{position:absolute;right:-160px;top:-160px;width:780px;height:780px;border:2px solid var(--accent);transform:rotate(45deg);opacity:.55;}
+  .cover .gold-shape.s2{width:520px;height:520px;right:80px;top:80px;border-color:var(--accent-soft);opacity:.3;}
+  .cover .inner{position:relative;z-index:2;padding:120px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+
+  .divider{background:var(--rb-700);}
+  .divider .num{font-family:'Fraunces',serif;font-size:200px;line-height:1;color:var(--accent);font-weight:400;letter-spacing:-.03em;margin-bottom:8px;}
+  .divider .title{font-family:'Fraunces',serif;font-size:88px;line-height:1.05;color:#fff;font-weight:500;max-width:1500px;}
+  .divider .lead{font-size:28px;color:#9DB8D6;max-width:1100px;margin-top:32px;line-height:1.45;}
+  .divider .geom{position:absolute;right:120px;bottom:160px;width:240px;height:240px;border:2px solid var(--accent);transform:rotate(45deg);opacity:.7;}
+  .divider .geom::after{content:"";position:absolute;inset:30px;border:2px solid var(--accent-soft);opacity:.5;}
+
+  .pill{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border-radius:999px;background:var(--rb-100);color:var(--rb-700);font-size:18px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+  .frame.dark .pill{background:rgba(255,255,255,.10);color:#C2D2E6;}
+  .pill.gold{background:rgba(46,91,216,.12);color:var(--accent);}
+
+  .card{background:#fff;border:1px solid var(--gray-200);padding:32px 32px 28px;border-radius:4px;display:flex;flex-direction:column;gap:14px;}
+  .card.tinted{background:var(--rb-50);border-color:var(--rb-100);}
+  .card.dark{background:var(--rb-700);color:#fff;border-color:var(--rb-700);}
+  .card.dark h3{color:#fff;}
+  .card.dark p{color:#C2D2E6;}
+  .card.dark .num{color:var(--accent);}
+  .card .num{font-family:'Fraunces',serif;font-size:42px;color:var(--rb-700);font-weight:500;}
+  .card h3{font-family:'Fraunces',serif;font-size:32px;font-weight:500;margin:0;color:var(--gray-900);line-height:1.15;}
+  .card p{margin:0;font-size:22px;line-height:1.5;color:var(--gray-700);}
+  .card ul{margin:0;padding-left:22px;font-size:22px;line-height:1.5;color:var(--gray-700);}
+  .card ul li{margin-bottom:6px;}
+  .card.gold-accent{border-top:4px solid var(--accent);}
+
+  table.dt{width:100%;border-collapse:collapse;font-size:22px;}
+  table.dt th,table.dt td{text-align:left;padding:16px 18px;border-bottom:1px solid var(--gray-200);vertical-align:top;line-height:1.4;}
+  table.dt thead th{font-size:20px;letter-spacing:.12em;text-transform:uppercase;color:#fff;font-weight:700;background:var(--rb-700);border-bottom:2px solid var(--accent);}
+  table.dt tbody tr:nth-child(even) td,table.dt tbody tr:nth-child(even) th{background:var(--rb-50);}
+  table.dt tbody th{font-weight:600;color:var(--gray-900);font-size:22px;width:280px;}
+
+  .bignum{font-family:'Fraunces',serif;font-size:200px;line-height:.9;color:var(--accent);font-weight:500;letter-spacing:-.03em;}
+
+  .cap{font-size:20px;color:var(--gray-500);font-style:italic;margin-top:12px;}
+
+  .mark-logo{display:inline-flex;align-items:center;gap:14px;font-size:22px;letter-spacing:.16em;text-transform:uppercase;color:#fff;font-weight:600;}
+  .mark-logo .sq{width:28px;height:28px;background:var(--accent);display:inline-block;}
+
+  .prov-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:36px;}
+  .prov{background:var(--rb-50);border:1px solid var(--rb-100);border-left:4px solid var(--accent);padding:28px 28px 24px;border-radius:4px;display:flex;flex-direction:column;gap:8px;}
+  .prov .pn{font-family:'Fraunces',serif;font-size:28px;color:var(--rb-700);font-weight:500;}
+  .prov .pl{font-size:18px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .prov .desc{font-size:18px;color:var(--gray-700);line-height:1.4;}
+
+  .defbox{background:var(--rb-700);color:#fff;padding:64px 80px;border-radius:4px;border-left:6px solid var(--accent);margin:36px 0;}
+  .defbox .quote{font-family:'Fraunces',serif;font-size:44px;line-height:1.25;font-weight:400;font-style:italic;color:#fff;}
+  .defbox .quote .em{color:var(--accent-soft);font-style:normal;font-weight:500;}
+
+  .flow{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:32px;position:relative;}
+  .flow .step{padding:28px 20px;background:var(--rb-50);border-right:1px solid #fff;position:relative;display:flex;flex-direction:column;gap:8px;}
+  .flow .step:nth-child(1){background:#EBF2FA;}
+  .flow .step:nth-child(2){background:#D6E3F0;}
+  .flow .step:nth-child(3){background:#A8C2DC;color:var(--rb-700);}
+  .flow .step:nth-child(4){background:#7AA4CC;color:#fff;}
+  .flow .step:nth-child(5){background:#2E6DA4;color:#fff;}
+  .flow .step:nth-child(6){background:#1A3A5C;color:#fff;}
+  .flow .step .num{font-family:'Fraunces',serif;font-size:36px;font-weight:500;}
+  .flow .step h4{font-family:'Fraunces',serif;font-size:22px;font-weight:500;margin:0;line-height:1.2;}
+  .flow .step .meta{font-size:15px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;opacity:.85;}
+  .flow .step .desc{font-size:16px;line-height:1.4;opacity:.95;}
+  .flow .step:nth-child(1) .num,.flow .step:nth-child(2) .num,.flow .step:nth-child(3) .num{color:var(--rb-700);}
+  .flow .step:nth-child(4) .num,.flow .step:nth-child(5) .num,.flow .step:nth-child(6) .num{color:var(--accent-soft);}
+
+  .lever{display:grid;grid-template-columns:1fr 100px 1fr;gap:24px;align-items:stretch;margin-top:32px;flex:1;}
+  .lever .pane{padding:36px;border-radius:4px;display:flex;flex-direction:column;gap:18px;}
+  .lever .pane.left{background:var(--rb-50);border:1px solid var(--rb-100);}
+  .lever .pane.right{background:var(--rb-700);color:#fff;border-top:4px solid var(--accent);}
+  .lever .pane h4{font-family:'Fraunces',serif;font-size:32px;margin:0;font-weight:500;}
+  .lever .pane.right h4{color:#fff;}
+  .lever .pane .row{display:flex;justify-content:space-between;border-bottom:1px solid var(--rb-100);padding:10px 0;font-size:20px;gap:16px;}
+  .lever .pane.right .row{border-bottom-color:rgba(255,255,255,.15);}
+  .lever .pane .row span:first-child{flex:1;}
+  .lever .pane .row span:last-child{font-weight:600;color:var(--rb-700);font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+  .lever .pane.right .row span:last-child{color:var(--accent-soft);}
+  .lever .pane .total{font-family:'Fraunces',serif;font-size:32px;color:var(--rb-700);font-weight:500;margin-top:8px;}
+  .lever .pane.right .total{color:var(--accent);}
+  .lever .arrow{display:flex;align-items:center;justify-content:center;color:var(--accent);font-family:'Fraunces',serif;font-size:80px;}
+
+  .closing-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;flex:1;align-items:start;margin-top:60px;}
+  .stripe{height:6px;width:80px;background:var(--accent);margin-bottom:18px;}
+
+  .click-zone{position:fixed;top:0;bottom:0;width:18%;z-index:50;cursor:pointer;background:transparent;transition:background .15s;}
+  .click-zone.left{left:0;}
+  .click-zone.right{right:0;}
+  .click-zone:hover{background:rgba(46,91,216,.04);}
+</style>
+</head>
+<body>
+<div class="click-zone left" id="zoneLeft"></div>
+<div class="click-zone right" id="zoneRight"></div>
+
+<div class="stage-wrapper">
+<div class="stage" id="stage">
+
+<!-- 1. PORTADA -->
+<section class="slide active" data-label="01 Portada">
+  <div class="cover">
+    <div class="bg"></div>
+    <div class="grid"></div>
+    <div class="gold-shape"></div>
+    <div class="gold-shape s2"></div>
+    <div class="inner">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <span class="mark-logo"><span class="sq"></span> EAFIT · MBA · 2026</span>
+        <div style="display:flex;gap:14px;">
+          <div style="border:1px dashed rgba(255,255,255,.35);padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#9DB8D6;letter-spacing:.1em;">[ LOGO · EAFIT ]</div>
+          <div style="border:1px dashed rgba(255,255,255,.35);padding:10px 16px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#9DB8D6;letter-spacing:.1em;">[ ESCUELA · FEG ]</div>
+        </div>
+      </div>
+      <div>
+        <div class="stripe"></div>
+        <div class="t-eyebrow on-dark" style="margin-bottom:28px;color:var(--accent-soft);">Programa de Asignatura · MBA</div>
+        <div class="t-title" style="font-size:128px;color:#fff;max-width:1600px;line-height:1;">Financial Management</div>
+        <div style="font-family:'Fraunces',serif;font-size:48px;color:#C2D2E6;margin-top:24px;font-style:italic;font-weight:400;">Gerencia Financiera para Tomadores de Decisiones</div>
+        <div style="margin-top:48px;display:flex;gap:64px;font-size:22px;color:#9DB8D6;letter-spacing:.06em;">
+          <div><div style="font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:6px;">Días</div><div style="font-family:'JetBrains Mono',monospace;font-size:36px;color:#fff;">6</div></div>
+          <div><div style="font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:6px;">Horas por día</div><div style="font-family:'JetBrains Mono',monospace;font-size:36px;color:#fff;">4</div></div>
+          <div><div style="font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:6px;">Horas totales</div><div style="font-family:'JetBrains Mono',monospace;font-size:36px;color:#fff;">24</div></div>
+          <div style="display:flex;flex-direction:column;"><div style="font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:6px;">Modalidad</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;color:#fff;line-height:1;padding-top:14px;">Intensivo · 2 semanas</div></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;color:#9DB8D6;font-size:18px;">
+        <div>
+          <div style="font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-soft);margin-bottom:6px;">Profesor</div>
+          <div style="font-family:'Fraunces',serif;font-size:28px;color:#fff;">Diego A. Restrepo-Tobón</div>
+          <div style="font-size:16px;margin-top:4px;">Escuela de Finanzas, Economía y Gobierno</div>
+          <a href="https://www.linkedin.com/in/diegorestrepotobon/" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent-soft);text-decoration:none;letter-spacing:.06em;margin-top:6px;display:inline-block;">linkedin.com/in/diegorestrepotobon</a>
+        </div>
+        <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.12em;">VERSIÓN 2.0 · MAYO 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ÍNDICE -->
+<section class="slide" data-label="02 Índice">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Financial Management · Índice</span><span class="logo-slot"><span class="lg">EAFIT</span><span class="lg">FEG</span> · 02 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Mapa de la presentación</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1500px;">Lo que vamos a recorrer en este curso</div>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:24px;align-items:stretch;margin-top:40px;">
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;"><div class="num" style="font-size:36px;">01</div><h3 style="font-size:26px;">¿Por qué este curso?</h3><p style="font-size:19px;">El CFO como tomador de decisiones bajo incertidumbre.</p></div>
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;"><div class="num" style="font-size:36px;">02</div><h3 style="font-size:26px;">Ficha técnica</h3><p style="font-size:19px;">Identificación, créditos, intensidad y características del curso.</p></div>
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;"><div class="num" style="font-size:36px;">03</div><h3 style="font-size:26px;">Objetivos y skills</h3><p style="font-size:19px;">Qué van a saber hacer al terminar los seis días.</p></div>
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;"><div class="num" style="font-size:36px;">04</div><h3 style="font-size:26px;">Seis días · cinco bloques</h3><p style="font-size:19px;">Costo de capital, inversión, estructura, dividendos, valoración.</p></div>
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;"><div class="num" style="font-size:36px;">05</div><h3 style="font-size:26px;">Metodología</h3><p style="font-size:19px;">Casos, laboratorio en Excel y Python, datos reales colombianos.</p></div>
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;"><div class="num" style="font-size:36px;">06</div><h3 style="font-size:26px;">Evaluación</h3><p style="font-size:19px;">Dos casos + capstone integrador · sin examen final.</p></div>
+      <div class="card tinted gold-accent" style="padding:24px 24px 22px;gap:10px;grid-column:span 2;"><div class="num" style="font-size:36px;">07</div><h3 style="font-size:26px;">Bibliografía y recursos</h3><p style="font-size:19px;">Berk &amp; DeMarzo · Koller, Goedhart &amp; Wessels · datos de mercado en vivo · plataformas digitales.</p></div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>02 / 19</span></div>
+  </div>
+</section>
+
+<!-- 3. SECCIÓN 1 -->
+<section class="slide" data-label="03 Sección 01">
+  <div class="frame dark divider">
+    <div class="runner"><span><span class="dot"></span>Sección Uno</span><span>03 / 19</span></div>
+    <div class="geom"></div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="num">01</div>
+      <div class="title">¿Por qué un curso<br/>de Gerencia Financiera?</div>
+      <div class="lead">El CFO moderno no aplica fórmulas: toma decisiones bajo incertidumbre que mueven el valor de la firma. Costo de capital, qué proyectos financiar, cómo financiarlos, qué hacer con la caja generada. Este curso entrena ese juicio.</div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>03 / 19</span></div>
+  </div>
+</section>
+
+<!-- 4. JUSTIFICACIÓN -->
+<section class="slide" data-label="04 Justificación">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Sección 01 · Justificación</span><span>04 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Por qué importa</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Las cuatro decisiones que definen el valor de una empresa</div>
+    <div style="flex:1;display:grid;grid-template-columns:1.15fr 1fr;gap:48px;margin-top:36px;align-items:stretch;">
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <p class="t-body" style="font-size:24px;line-height:1.5;">Toda empresa, sin importar el sector o el tamaño, enfrenta cuatro decisiones financieras críticas: <strong>qué inversiones realizar</strong>, <strong>cómo financiarlas</strong>, <strong>qué estructura de capital sostener</strong> y <strong>cómo distribuir el efectivo generado</strong>. Cada una se toma bajo incertidumbre, con información incompleta y bajo restricciones reales del mercado.</p>
+        <p class="t-body" style="font-size:24px;line-height:1.5;">Para un MBA que aspira a posiciones de liderazgo — CFO, gerente general, director financiero, banquero de inversión, gestor de portafolios — dominar esta lógica no es opcional. Es la diferencia entre ejecutar instrucciones y tomar decisiones que el mercado va a juzgar.</p>
+        <div class="defbox" style="padding:36px 44px;margin:8px 0 0;">
+          <div class="quote" style="font-size:30px;line-height:1.35;">El WACC no es una fórmula. <span class="em">Es una conversación</span> — y la conversación la hacen ustedes, no Excel.</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="card tinted gold-accent"><span class="pill">Decisiones del CFO</span><h3 style="font-size:26px;">Las cuatro familias</h3><ul style="font-size:20px;"><li><strong>Inversión:</strong> qué proyectos generan valor.</li><li><strong>Financiación:</strong> deuda, equity, instrumentos.</li><li><strong>Estructura de capital:</strong> mezcla óptima.</li><li><strong>Distribución:</strong> dividendos, recompras, caja.</li><li>Transversal: <strong>gestión de riesgo y liquidez.</strong></li></ul></div>
+        <div class="card dark"><span class="pill" style="background:rgba(255,255,255,.10);color:#C2D2E6;">El enfoque del curso</span><h3 style="font-size:26px;color:#fff;">Teoría aplicada a Colombia</h3><p style="color:#C2D2E6;font-size:20px;">Berk &amp; DeMarzo enseña la teoría. <strong style="color:#fff;">Este curso la aplica con datos reales del mercado colombiano</strong> — tasas, primas, riesgo país, empresas locales. Decisiones reales, no de libro.</p></div>
+      </div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>04 / 19</span></div>
+  </div>
+</section>
+
+<!-- 5. OBJETIVOS Y SKILLS -->
+<section class="slide" data-label="05 Objetivos y skills">
+  <div class="frame tinted">
+    <div class="runner"><span><span class="dot"></span>Sección 01 · Objetivos</span><span>05 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Learning objectives</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Cinco objetivos · cinco skills · un mismo perfil profesional</div>
+    <p class="t-body" style="font-size:22px;line-height:1.5;margin-top:18px;max-width:1700px;">Al finalizar el curso, los estudiantes habrán desarrollado tanto el conocimiento técnico como las capacidades de juicio que distinguen a un tomador de decisiones financieras.</p>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;margin-top:32px;align-items:stretch;">
+      <div class="card gold-accent" style="padding:24px;gap:10px;"><div class="num" style="font-size:32px;">01</div><h3 style="font-size:22px;">Costo de capital</h3><p style="font-size:17px;line-height:1.4;">Dominar el cálculo y la aplicación estratégica del costo de capital en decisiones corporativas.</p></div>
+      <div class="card gold-accent" style="padding:24px;gap:10px;"><div class="num" style="font-size:32px;">02</div><h3 style="font-size:22px;">Decisiones de inversión</h3><p style="font-size:17px;line-height:1.4;">Analizar oportunidades de inversión con métodos financieros robustos — VPN, TIR, escenarios.</p></div>
+      <div class="card gold-accent" style="padding:24px;gap:10px;"><div class="num" style="font-size:32px;">03</div><h3 style="font-size:22px;">Estructura de capital</h3><p style="font-size:17px;line-height:1.4;">Estrategizar la estructura óptima y evaluar políticas de financiamiento alternativas.</p></div>
+      <div class="card gold-accent" style="padding:24px;gap:10px;"><div class="num" style="font-size:32px;">04</div><h3 style="font-size:22px;">Política de dividendos</h3><p style="font-size:17px;line-height:1.4;">Evaluar las implicaciones de diferentes políticas de pago a accionistas y su efecto en valor.</p></div>
+      <div class="card gold-accent" style="padding:24px;gap:10px;"><div class="num" style="font-size:32px;">05</div><h3 style="font-size:22px;">Valoración de firma</h3><p style="font-size:17px;line-height:1.4;">Conducir valoraciones por DCF y otros métodos para sustentar decisiones estratégicas.</p></div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>05 / 19</span></div>
+  </div>
+</section>
+
+<!-- 6. KEY SKILLS DEVELOPED -->
+<section class="slide" data-label="06 Key skills">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Sección 01 · Key skills</span><span>06 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Key skills developed</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Cinco capacidades que distinguen al egresado del curso</div>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:36px;align-items:stretch;">
+      <div class="card tinted gold-accent"><span class="pill">Skill 01</span><h3 style="font-size:26px;">Análisis y razonamiento financiero</h3><p style="font-size:20px;">Capacidad para analizar estados financieros y datos económicos y traducirlos en decisiones informadas.</p></div>
+      <div class="card tinted gold-accent"><span class="pill">Skill 02</span><h3 style="font-size:26px;">Decisión estratégica</h3><p style="font-size:20px;">Diseñar estrategias basadas en evaluaciones financieras alineadas con los objetivos organizacionales.</p></div>
+      <div class="card tinted gold-accent"><span class="pill">Skill 03</span><h3 style="font-size:26px;">Pensamiento crítico</h3><p style="font-size:20px;">Evaluar la viabilidad y los riesgos de opciones de inversión y de financiación bajo incertidumbre.</p></div>
+      <div class="card tinted gold-accent"><span class="pill">Skill 04</span><h3 style="font-size:26px;">Comunicación</h3><p style="font-size:20px;">Articular estrategias y decisiones financieras de manera clara y persuasiva ante stakeholders.</p></div>
+      <div class="card tinted gold-accent"><span class="pill">Skill 05</span><h3 style="font-size:26px;">Análisis cuantitativo</h3><p style="font-size:20px;">Uso avanzado de herramientas cuantitativas — Excel y Python — para pronóstico y valoración.</p></div>
+      <div class="card dark"><span class="pill" style="background:rgba(255,255,255,.10);color:#C2D2E6;">El perfil del CFO</span><h3 style="font-size:26px;color:#fff;">Decisiones, no fórmulas</h3><p style="color:#C2D2E6;font-size:20px;">Las cinco skills convergen en un perfil único: <strong style="color:#fff;">el tomador de decisiones financieras que sustenta cada número con un argumento</strong>.</p></div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>06 / 19</span></div>
+  </div>
+</section>
+
+<!-- 7. SECCIÓN 2 -->
+<section class="slide" data-label="07 Sección 02">
+  <div class="frame dark divider">
+    <div class="runner"><span><span class="dot"></span>Sección Dos</span><span>07 / 19</span></div>
+    <div class="geom"></div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="num">02</div>
+      <div class="title">Ficha técnica<br/>del curso.</div>
+      <div class="lead">Datos esenciales: identificación institucional, intensidad horaria, modalidad, perfil del estudiante y posición del curso dentro del MBA de EAFIT.</div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>07 / 19</span></div>
+  </div>
+</section>
+
+<!-- 8. FICHA TÉCNICA -->
+<section class="slide" data-label="08 Ficha técnica">
+  <div class="frame tinted">
+    <div class="runner"><span><span class="dot"></span>Sección 02 · Ficha</span><span>08 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Ficha técnica</div>
+    <div class="t-h1" style="margin-top:14px;">Datos esenciales de la asignatura</div>
+    <table class="dt" style="margin-top:32px;">
+      <thead><tr><th style="width:380px;padding:12px 18px;">Campo</th><th style="padding:12px 18px;">Valor</th></tr></thead>
+      <tbody style="font-size:20px;">
+        <tr><th style="padding:10px 18px;">Nombre del programa académico</th><td style="padding:10px 18px;">Financial Management — <em>Gerencia Financiera para Tomadores de Decisiones</em></td></tr>
+        <tr><th style="padding:10px 18px;">Escuela</th><td style="padding:10px 18px;">Escuela de Administración</td></tr>
+        <tr><th style="padding:10px 18px;">Programa</th><td style="padding:10px 18px;">Maestría en Administración de Negocios — MBA</td></tr>
+        <tr><th style="padding:10px 18px;">Modalidad</th><td style="padding:10px 18px;">Intensivo — dos semanas · jueves, viernes y sábados</td></tr>
+        <tr><th style="padding:10px 18px;">Intensidad horaria</th><td style="padding:10px 18px;"><strong style="color:var(--accent);">6 días</strong> de <strong style="color:var(--accent);">4 horas</strong> · <strong style="color:var(--accent);">24 horas</strong> totales</td></tr>
+        <tr><th style="padding:10px 18px;">Idioma</th><td style="padding:10px 18px;">Bilingüe — material en inglés, discusión en español</td></tr>
+        <tr><th style="padding:10px 18px;">Prerrequisitos</th><td style="padding:10px 18px;">Nivelatorios en costos, matemáticas financieras y análisis financiero</td></tr>
+        <tr><th style="padding:10px 18px;">Características</th><td style="padding:10px 18px;">Curso obligatorio · evaluación por casos · sin examen final</td></tr>
+        <tr><th style="padding:10px 18px;">Profesor responsable</th><td style="padding:10px 18px;">Diego A. Restrepo-Tobón</td></tr>
+      </tbody>
+    </table>
+    <p class="cap" style="margin-top:18px;margin-bottom:0;font-size:17px;">El curso se ubica en una posición avanzada del MBA: presupone manejo sólido de los nivelatorios y se enfoca en decisiones gerenciales bajo incertidumbre, fricciones y restricciones reales de mercado.</p>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>08 / 19</span></div>
+  </div>
+</section>
+
+<!-- 9. SECCIÓN 3 -->
+<section class="slide" data-label="09 Sección 03">
+  <div class="frame dark divider">
+    <div class="runner"><span><span class="dot"></span>Sección Tres</span><span>09 / 19</span></div>
+    <div class="geom"></div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="num">03</div>
+      <div class="title">Seis días.<br/>De la decisión<br/><span style="color:var(--accent);">a la valoración integral.</span></div>
+      <div class="lead">El curso recorre, en orden lógico, las cinco grandes áreas de la gerencia financiera moderna. Empezamos por costo de capital, seguimos con decisiones de inversión, luego estructura y dividendos, y cerramos con valoración integral por DCF.</div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>09 / 19</span></div>
+  </div>
+</section>
+
+<!-- 10. MAPA DE DÍAS -->
+<section class="slide" data-label="10 Mapa de días">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Sección 03 · Mapa</span><span>10 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Los seis días del curso</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Cronograma — 24 horas de contenido estructurado</div>
+    <p class="t-body" style="font-size:22px;margin-top:18px;max-width:1700px;">Cada día equivale a 4 horas de clase. Los días 1 y 2 construyen el fundamento de <strong>costo de capital</strong>; los días 2 y 3 trabajan <strong>decisiones de inversión</strong>; el día 4 cubre <strong>estructura de capital y dividendos</strong>; los días 5 y 6 cierran con <strong>valoración por DCF</strong> — el corazón integrador del curso.</p>
+    <div class="flow" style="margin-top:40px;">
+      <div class="step">
+        <div class="meta">Día 01</div>
+        <div class="num">4h</div>
+        <h4>Cost of Capital I</h4>
+        <div class="desc">Risk-return, costo de deuda, costo de equity, CAPM.</div>
+      </div>
+      <div class="step">
+        <div class="meta">Día 02</div>
+        <div class="num">4h</div>
+        <h4>Cost of Capital II<br/>+ Investment</h4>
+        <div class="desc">WACC, MM Prop. II. Inicio de decisiones de inversión: VPN, TIR.</div>
+      </div>
+      <div class="step">
+        <div class="meta">Día 03</div>
+        <div class="num">4h</div>
+        <h4>Investment Decisions</h4>
+        <div class="desc">FCL, EBITDA, EVA®, análisis de proyectos por escenarios.</div>
+      </div>
+      <div class="step">
+        <div class="meta">Día 04</div>
+        <div class="num">4h</div>
+        <h4>Capital Structure<br/>+ Dividend Policy</h4>
+        <div class="desc">Leverage, debt vs. equity, payout policy, señalización al mercado.</div>
+      </div>
+      <div class="step">
+        <div class="meta">Día 05</div>
+        <div class="num">4h</div>
+        <h4>Firm Valuation I</h4>
+        <div class="desc">DCF aplicado, proyecciones, terminal value, ajustes de valoración.</div>
+      </div>
+      <div class="step">
+        <div class="meta">Día 06</div>
+        <div class="num">4h</div>
+        <h4>Firm Valuation II<br/>+ Capstone</h4>
+        <div class="desc">Valoración integral, reconciliación con múltiplos, entrega capstone.</div>
+      </div>
+    </div>
+    <p class="cap" style="margin-top:24px;font-size:18px;">Distribución equilibrada sobre las 24 horas. Cada día construye sobre el anterior; el capstone final integra costo de capital, inversión, estructura, política de pagos y valoración.</p>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>10 / 19</span></div>
+  </div>
+</section>
+
+<!-- 11. DÍAS 1-2: COSTO DE CAPITAL -->
+<section class="slide" data-label="11 Días 1-2 Costo de Capital">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Sección 03 · Días 01–02</span><span>11 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Días 01 y 02 · 8 horas</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Cost of Capital</div>
+    <p class="t-body" style="font-size:24px;margin-top:18px;max-width:1700px;"><strong>Objetivo:</strong> Entender cómo se calculan y se aplican los distintos componentes del costo de capital — la tasa contra la cual se evalúa cada decisión de la firma.</p>
+    <div style="flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:36px;margin-top:32px;align-items:stretch;">
+      <div class="card tinted gold-accent">
+        <span class="pill">Sub-objetivos</span>
+        <h3 style="font-size:28px;">Conceptos y aplicaciones</h3>
+        <ul style="font-size:20px;">
+          <li>Primeros principios del trade-off riesgo-retorno.</li>
+          <li>Definir y calcular el <strong>costo de la deuda</strong> y el <strong>costo del equity</strong> (CAPM).</li>
+          <li>Analizar el <strong>WACC</strong> y sus aplicaciones en decisiones corporativas.</li>
+          <li>Entender WACC, costo de capital desapalancado y apalancado.</li>
+          <li>Comprender la <strong>Proposición II de Modigliani &amp; Miller</strong>.</li>
+          <li>Aplicar el enfoque de comparables para empresas no listadas en Colombia.</li>
+        </ul>
+      </div>
+      <div class="card dark">
+        <span class="pill" style="background:rgba(255,255,255,.10);color:#C2D2E6;">Actividades</span>
+        <h3 style="font-size:28px;color:#fff;">Laboratorio aplicado</h3>
+        <ul style="color:#C2D2E6;font-size:20px;">
+          <li><strong style="color:#fff;">Portfolio theory</strong> básico en Excel y Python.</li>
+          <li>Análisis del <strong style="color:#fff;">CAPM con datos reales</strong> del mercado.</li>
+          <li>Cálculo del <strong style="color:#fff;">WACC para una empresa colombiana</strong>: selección de comparables, beta apalancada/desapalancada, ERP, prima de riesgo país.</li>
+          <li>Discusión: histórica vs. implícita vs. Kroll · spot vs. normalizada · EMBI+ Colombia.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="cap" style="margin-top:18px;font-size:18px;"><strong>Lectura básica:</strong> Berk &amp; DeMarzo · <em>Corporate Finance</em> · 5th Global Edition · Capítulo 12 "Estimating the Cost of Capital".</p>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>11 / 19</span></div>
+  </div>
+</section>
+
+<!-- 12. DÍAS 2-3: DECISIONES DE INVERSIÓN -->
+<section class="slide" data-label="12 Días 2-3 Investment">
+  <div class="frame tinted">
+    <div class="runner"><span><span class="dot"></span>Sección 03 · Días 02–03</span><span>12 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Días 02 y 03 · 4 horas dedicadas</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Investment Decisions</div>
+    <p class="t-body" style="font-size:24px;margin-top:18px;max-width:1700px;"><strong>Objetivo:</strong> Evaluar proyectos y oportunidades de inversión usando las herramientas financieras estándar y reconocer los errores prácticos más comunes.</p>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:36px;align-items:stretch;">
+      <div class="card gold-accent" style="display:flex;flex-direction:column;">
+        <div class="num" style="font-size:36px;">01</div>
+        <h3 style="font-size:24px;">VPN y TIR</h3>
+        <p style="font-size:19px;">Aplicación rigurosa para evaluación de proyectos · cuándo cada uno engaña y por qué.</p>
+      </div>
+      <div class="card gold-accent" style="display:flex;flex-direction:column;">
+        <div class="num" style="font-size:36px;">02</div>
+        <h3 style="font-size:24px;">Riesgo en proyectos</h3>
+        <p style="font-size:19px;">Examinar el rol del riesgo en la selección de proyectos · ajustes al costo de capital.</p>
+      </div>
+      <div class="card gold-accent" style="display:flex;flex-direction:column;">
+        <div class="num" style="font-size:36px;">03</div>
+        <h3 style="font-size:24px;">FCL, EBITDA, EVA®</h3>
+        <p style="font-size:19px;">Entender y proyectar Free Cash Flow, EBITDA y Economic Value Added.</p>
+      </div>
+      <div class="card gold-accent" style="display:flex;flex-direction:column;">
+        <div class="num" style="font-size:36px;">04</div>
+        <h3 style="font-size:24px;">Análisis por escenarios</h3>
+        <p style="font-size:19px;">Análisis financiero completo del proyecto bajo múltiples escenarios.</p>
+      </div>
+    </div>
+    <div class="defbox" style="padding:28px 40px;margin-top:24px;margin-bottom:8px;">
+      <div class="quote" style="font-size:26px;line-height:1.3;">La diferencia entre un gerente promedio y un CFO sobresaliente es que el segundo <span class="em">sabe cuándo el VPN miente</span> — y por qué.</div>
+    </div>
+    <p class="cap" style="margin-top:8px;margin-bottom:16px;font-size:17px;"><strong>Lectura básica:</strong> Berk &amp; DeMarzo · Capítulo 7 "Investment Decision Rules". <strong>Caso:</strong> <em>Hansson Private Label</em> — Harvard Business School.</p>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>12 / 19</span></div>
+  </div>
+</section>
+
+<!-- 13. DÍA 4: ESTRUCTURA + DIVIDENDOS -->
+<section class="slide" data-label="13 Día 4 Estructura + Dividendos">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Sección 03 · Día 04</span><span>13 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Día 04 · 4 horas</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Capital Structure &amp; Dividend Policy</div>
+    <p class="t-body" style="font-size:22px;margin-top:18px;max-width:1700px;">Dos decisiones simétricas: cómo financiar la firma y qué hacer con la caja generada. Ambas se modelan bajo el mismo marco de fricciones — impuestos, costos de quiebra, asimetrías de información, señalización al mercado.</p>
+    <div class="lever" style="margin-top:24px;margin-bottom:20px;">
+      <div class="pane left" style="padding:28px;gap:12px;">
+        <span class="pill">Capital Structure · 2h</span>
+        <h4 style="font-size:28px;">Estructura de capital y políticas de financiación</h4>
+        <p style="font-size:18px;color:var(--gray-700);margin:0;">Decisiones estratégicas sobre la mezcla óptima de deuda y equity y sus efectos en valor.</p>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Impacto del apalancamiento</span><span>Leverage</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Modigliani-Miller en mercado perfecto</span><span>MM · Ch. 14</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Deuda e impuestos · tax shield</span><span>Ch. 15</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Costos de quiebra · directos e indirectos</span><span>Ch. 16</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Trade-off vs. pecking order</span><span>Theory</span></div>
+        <div class="total" style="font-size:18px;margin-top:10px;color:var(--gray-700);font-family:'Inter',sans-serif;font-style:italic;">Lecturas: Caps. 14, 15 y 16 de Berk &amp; DeMarzo.</div>
+      </div>
+      <div class="arrow">+</div>
+      <div class="pane right" style="padding:28px;gap:12px;">
+        <span class="pill" style="background:rgba(255,255,255,.10);color:#C2D2E6;">Dividend Policy · 2h</span>
+        <h4 style="font-size:28px;">Política de pagos a accionistas</h4>
+        <p style="font-size:18px;color:#C2D2E6;margin:0;">Análisis de las distintas estrategias de pago y sus impactos sobre la firma y los accionistas.</p>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Políticas de dividendos</span><span>Policy</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Señalización al mercado</span><span>Signaling</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Cambios en dividendo · efecto en valor</span><span>Value Effect</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Dividendos vs. recompras vs. caja</span><span>Buyback</span></div>
+        <div class="row" style="font-size:18px;padding:8px 0;"><span>Contexto tributario colombiano</span><span>COL Tax</span></div>
+        <div class="total" style="font-size:18px;margin-top:10px;color:var(--accent-soft);font-family:'Inter',sans-serif;font-style:italic;">Lectura: Cap. 17 — "Payout Policy".</div>
+      </div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>13 / 19</span></div>
+  </div>
+</section>
+
+<!-- 14. DÍAS 5-6: VALORACIÓN DCF - NÚCLEO -->
+<section class="slide" data-label="14 Días 5-6 Valoración DCF">
+  <div class="frame dark">
+    <div class="runner"><span><span class="dot"></span>Sección 03 · Días 05–06 · Núcleo integrador</span><span>14 / 19</span></div>
+    <div style="position:absolute;right:120px;top:160px;width:380px;height:380px;border:2px solid var(--accent);transform:rotate(45deg);opacity:.25;"></div>
+    <div style="position:absolute;right:200px;top:240px;width:220px;height:220px;border:2px solid var(--accent-soft);transform:rotate(45deg);opacity:.2;"></div>
+    <div class="t-eyebrow on-dark" style="margin-top:24px;color:var(--accent-soft);">Días 05 y 06 · 8 horas · Núcleo integrador</div>
+    <div class="t-h1" style="margin-top:14px;color:#fff;max-width:1500px;">Firm Valuation by Discounted Cash Flow</div>
+    <p class="t-body" style="font-size:24px;color:#C2D2E6;max-width:1500px;margin-top:18px;line-height:1.5;"><strong style="color:#fff;">Objetivo:</strong> Realizar valoraciones integrales de empresas usando DCF y otros métodos. Esta es <strong style="color:var(--accent-soft);">la sesión donde converge todo</strong> — costo de capital, flujos, estructura, pagos.</p>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px;align-items:stretch;">
+      <div style="background:rgba(255,255,255,.05);border-top:4px solid var(--accent);padding:28px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'Fraunces',serif;font-size:48px;color:var(--accent);font-weight:500;line-height:1;">01</div><div style="font-family:'Fraunces',serif;font-size:24px;color:#fff;font-weight:500;line-height:1.2;">DCF en la práctica</div><p style="font-size:18px;color:#C2D2E6;line-height:1.45;margin:0;">Aplicación del análisis DCF en ejemplos reales — construcción de flujos, descuento al WACC, valor terminal.</p></div>
+      <div style="background:rgba(255,255,255,.05);border-top:4px solid var(--accent);padding:28px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'Fraunces',serif;font-size:48px;color:var(--accent);font-weight:500;line-height:1;">02</div><div style="font-family:'Fraunces',serif;font-size:24px;color:#fff;font-weight:500;line-height:1.2;">Pronóstico y supuestos</div><p style="font-size:18px;color:#C2D2E6;line-height:1.45;margin:0;">Retos del pronóstico financiero — proyectar ventas, márgenes, capex, capital de trabajo en mercados emergentes.</p></div>
+      <div style="background:rgba(255,255,255,.05);border-top:4px solid var(--accent);padding:28px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'Fraunces',serif;font-size:48px;color:var(--accent);font-weight:500;line-height:1;">03</div><div style="font-family:'Fraunces',serif;font-size:24px;color:#fff;font-weight:500;line-height:1.2;">Ajustes de valoración</div><p style="font-size:18px;color:#C2D2E6;line-height:1.45;margin:0;">Caja en exceso, deuda neta, minoritarios, inversiones no operativas — del valor de la firma al valor del equity.</p></div>
+      <div style="background:rgba(255,255,255,.05);border-top:4px solid var(--accent);padding:28px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'Fraunces',serif;font-size:48px;color:var(--accent);font-weight:500;line-height:1;">04</div><div style="font-family:'Fraunces',serif;font-size:24px;color:#fff;font-weight:500;line-height:1.2;">Múltiplos comparativos</div><p style="font-size:18px;color:#C2D2E6;line-height:1.45;margin:0;">EV/EBITDA, P/E, EV/Sales — reconciliación con DCF y cuándo cada uno engaña.</p></div>
+      <div style="background:rgba(255,255,255,.05);border-top:4px solid var(--accent);padding:28px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'Fraunces',serif;font-size:48px;color:var(--accent);font-weight:500;line-height:1;">05</div><div style="font-family:'Fraunces',serif;font-size:24px;color:#fff;font-weight:500;line-height:1.2;">Sensibilidad y escenarios</div><p style="font-size:18px;color:#C2D2E6;line-height:1.45;margin:0;">Stress testing del modelo: ¿qué pasa si el WACC sube 200 pb? ¿Si el crecimiento terminal cae al 2%?</p></div>
+      <div style="background:rgba(255,255,255,.05);border-top:4px solid var(--accent);padding:28px 24px;display:flex;flex-direction:column;gap:12px;"><div style="font-family:'Fraunces',serif;font-size:48px;color:var(--accent);font-weight:500;line-height:1;">06</div><div style="font-family:'Fraunces',serif;font-size:24px;color:#fff;font-weight:500;line-height:1.2;">Capstone Project</div><p style="font-size:18px;color:#C2D2E6;line-height:1.45;margin:0;">Valoración integral de una empresa colombiana — entrega al final del día 6 a las 11:59 p.m.</p></div>
+    </div>
+    <p class="cap" style="margin-top:24px;font-size:18px;color:#9DB8D6;"><strong style="color:#fff;">Lectura:</strong> Koller, Goedhart &amp; Wessels · <em>Valuation: Measuring and Managing the Value of Companies</em> · 7th edition · John Wiley &amp; Sons · 2020.</p>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>14 / 19</span></div>
+  </div>
+</section>
+
+<!-- 15. SECCIÓN 4 -->
+<section class="slide" data-label="15 Sección 04">
+  <div class="frame dark divider">
+    <div class="runner"><span><span class="dot"></span>Sección Cuatro</span><span>15 / 19</span></div>
+    <div class="geom"></div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="num">04</div>
+      <div class="title">Metodología<br/>y evaluación.</div>
+      <div class="lead">Aprendizaje activo: exposición magistral, lecturas previas, casos Harvard, talleres en Excel y Python, datos reales del mercado colombiano. La evaluación es por casos integradores — no hay examen final.</div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>15 / 19</span></div>
+  </div>
+</section>
+
+<!-- 16. ESTRATEGIAS METODOLÓGICAS -->
+<section class="slide" data-label="16 Estrategias metodológicas">
+  <div class="frame tinted">
+    <div class="runner"><span><span class="dot"></span>Sección 04 · Metodología</span><span>16 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Estrategias metodológicas</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Cómo aprendemos en este curso</div>
+    <div style="flex:1;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:1fr;gap:24px;margin-top:36px;align-items:stretch;">
+      <div class="card gold-accent"><span class="pill">01</span><h3 style="font-size:26px;">Exposición magistral</h3><p style="font-size:20px;">El profesor expone los conceptos fundamentales — Berk &amp; DeMarzo, Koller — con el rigor que exige un MBA.</p></div>
+      <div class="card gold-accent"><span class="pill">02</span><h3 style="font-size:26px;">Lecturas previas</h3><p style="font-size:20px;">Capítulos asignados antes de cada sesión. Los estudiantes llegan listos para discutir, no para escuchar pasivamente.</p></div>
+      <div class="card gold-accent"><span class="pill">03</span><h3 style="font-size:26px;">Laboratorio Excel + Python</h3><p style="font-size:20px;">Modelación financiera aplicada — costo de capital, valoración DCF, análisis de escenarios — con datos reales.</p></div>
+      <div class="card gold-accent"><span class="pill">04</span><h3 style="font-size:26px;">Casos Harvard</h3><p style="font-size:20px;"><em>Hansson Private Label</em>, <em>New Heritage Doll Company</em> y otros — la mejor pedagogía aplicada del mundo.</p></div>
+      <div class="card gold-accent"><span class="pill">05</span><h3 style="font-size:26px;">Datos reales colombianos</h3><p style="font-size:20px;">Empresas locales, tasas vigentes del mercado, EMBI+, TES, comparables internacionales — no ejercicios artificiales.</p></div>
+      <div class="card gold-accent"><span class="pill">06</span><h3 style="font-size:26px;">Capstone integrador</h3><p style="font-size:20px;">Proyecto final que demuestra dominio integral — valoración + estructura + dividendos en un análisis único.</p></div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>16 / 19</span></div>
+  </div>
+</section>
+
+<!-- 17. EVALUACIÓN -->
+<section class="slide" data-label="17 Evaluación">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Sección 04 · Evaluación</span><span>17 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Criterios de evaluación académica</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Dos casos + capstone · sin examen final</div>
+    <p class="t-body" style="font-size:22px;margin-top:18px;max-width:1700px;">La evaluación es <strong>100% por casos y proyecto integrador</strong>. Cada entrega exige aplicar todos los conceptos vistos hasta ese momento. No hay parciales ni examen final tradicional.</p>
+    <div style="flex:1;display:grid;grid-template-columns:2fr 1fr;gap:48px;margin-top:36px;align-items:stretch;">
+      <table class="dt" style="height:fit-content;">
+        <thead><tr><th style="width:340px;">Estrategia evaluativa</th><th style="width:200px;">Entrega</th><th style="width:160px;">Ponderación</th><th>Contenido evaluado</th></tr></thead>
+        <tbody>
+          <tr><th>Case 1 — Cost of Capital, Colombian Company</th><td>Día 4 · inicio de clase</td><td><strong style="color:var(--accent);">20%</strong></td><td>Costo de capital aplicado</td></tr>
+          <tr><th>Case 2 — New Heritage Doll Company</th><td>Día 2 · inicio de clase</td><td><strong style="color:var(--accent);">30%</strong></td><td>Decisiones de inversión</td></tr>
+          <tr><th>Capstone — Colombian Company Valuation, Capital Structure &amp; Dividend Policy</th><td>Día 6 · 11:59 p.m.</td><td><strong style="color:var(--accent);">50%</strong></td><td>Integración total</td></tr>
+          <tr><th style="background:var(--rb-700);color:#fff;">Total</th><td style="background:var(--rb-700);color:#fff;">—</td><td style="background:var(--rb-700);color:#fff;"><strong>100%</strong></td><td style="background:var(--rb-700);color:#fff;">Todos los objetivos</td></tr>
+        </tbody>
+      </table>
+      <div class="card dark" style="align-self:center;">
+        <span class="pill" style="background:rgba(255,255,255,.10);color:#C2D2E6;">Lógica de la evaluación</span>
+        <h3 style="font-size:28px;color:#fff;">Acumulativa por diseño</h3>
+        <p style="color:#C2D2E6;font-size:20px;">El Capstone exige valoración DCF completa de una empresa colombiana, propuesta de estructura óptima y política de dividendos — la prueba integral del curso.</p>
+        <p style="color:#C2D2E6;font-size:20px;"><strong style="color:#fff;">No es memorización.</strong> Es resolver un problema gerencial real con herramientas reales.</p>
+      </div>
+    </div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>17 / 19</span></div>
+  </div>
+</section>
+
+<!-- 18. RECURSOS Y BIBLIOGRAFÍA -->
+<section class="slide" data-label="18 Recursos y bibliografía">
+  <div class="frame">
+    <div class="runner"><span><span class="dot"></span>Recursos · Bibliografía</span><span>18 / 19</span></div>
+    <div class="t-eyebrow" style="margin-top:24px;">Recursos y bibliografía</div>
+    <div class="t-h1" style="margin-top:14px;max-width:1600px;">Lo que vamos a leer y a usar</div>
+    <div style="flex:1;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:28px;margin-top:36px;align-items:stretch;">
+      <div class="card tinted gold-accent">
+        <span class="pill">Bibliografía base</span>
+        <h3 style="font-size:26px;">Dos libros de referencia</h3>
+        <ul style="font-size:19px;">
+          <li><strong>Berk, J. &amp; DeMarzo, P.</strong> <em>Corporate Finance.</em> 5th Global Edition. Pearson.</li>
+          <li><strong>Koller, T., Goedhart, M. &amp; Wessels, D.</strong> <em>Valuation: Measuring and Managing the Value of Companies.</em> Wiley · 7.ª ed. · 2020.</li>
+        </ul>
+        <p style="font-size:18px;color:var(--gray-700);margin-top:4px;">Berk &amp; DeMarzo es el texto principal para los días 1 al 4. Koller para la unidad de valoración integral (días 5 y 6).</p>
+      </div>
+      <div class="card tinted">
+        <span class="pill">Recursos tecnológicos</span>
+        <h3 style="font-size:26px;">Plataformas y herramientas</h3>
+        <ul style="font-size:19px;">
+          <li><strong>Microsoft Excel</strong> — modelación financiera.</li>
+          <li><strong>Python</strong> — análisis de portafolios, regresiones, CAPM.</li>
+          <li><strong>Bloomberg · Yahoo Finance</strong> — datos de mercado en vivo.</li>
+          <li><strong>Damodaran online</strong> — ERP, betas por industria, riesgo país.</li>
+          <li>Microsoft Teams · EAFIT Interactiva.</li>
+        </ul>
+      </div>
+      <div class="card dark">
+        <span class="pill" style="background:rgba(255,255,255,.10);color:#C2D2E6;">Casos y datos colombianos</span>
+        <h3 style="font-size:26px;color:#fff;">Material aplicado</h3>
+        <ul style="color:#C2D2E6;font-size:19px;">
+          <li><strong style="color:#fff;">Casos Harvard:</strong> Hansson Private Label · New Heritage Doll Company.</li>
+          <li>BanRep · <em>tasas de interés, TES, EMBI+ Colombia</em>.</li>
+          <li>BVC · datos de empresas listadas en Colombia.</li>
+          <li>Kroll · Duff &amp; Phelps · primas normalizadas.</li>
+          <li>Aswath Damodaran · NYU Stern Online Database.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="cap" style="margin-top:18px;font-size:17px;">Bases de datos complementarias: DANE · Banco de la República · Superintendencia Financiera de Colombia. Referencias adicionales en la lista oficial del curso.</p>
+    <div class="foot"><span>Financial Management — MBA · EAFIT</span><span>18 / 19</span></div>
+  </div>
+</section>
+
+<!-- 19. CIERRE -->
+<section class="slide" data-label="19 Cierre">
+  <div class="frame dark">
+    <div class="runner"><span><span class="dot"></span>Cierre</span><span>19 / 19</span></div>
+    <div style="position:absolute;right:120px;top:160px;width:380px;height:380px;border:2px solid var(--accent);transform:rotate(45deg);opacity:.25;"></div>
+    <div style="position:absolute;right:200px;top:240px;width:220px;height:220px;border:2px solid var(--accent-soft);transform:rotate(45deg);opacity:.2;"></div>
+    <div class="t-eyebrow on-dark" style="margin-top:24px;color:var(--accent-soft);">Lo que llevarán al cierre del curso</div>
+    <div class="t-h1" style="margin-top:14px;color:#fff;max-width:1500px;font-size:64px;">Tres capacidades que distinguen a un egresado del curso</div>
+    <div style="flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:64px;margin-top:48px;align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:28px;">
+        <div style="display:flex;gap:24px;align-items:flex-start;"><div style="font-family:'Fraunces',serif;font-size:54px;color:var(--accent);font-weight:500;line-height:1;min-width:70px;">01</div><div><div style="font-family:'Fraunces',serif;font-size:32px;color:#fff;font-weight:500;line-height:1.2;">Un WACC defendible para una empresa colombiana</div><div style="font-size:20px;color:#9DB8D6;margin-top:8px;line-height:1.45;">Con comparables seleccionados con criterio, prima de mercado justificada, beta apalancada/desapalancada y prima de riesgo país — sustentable frente a cualquier comité de inversión.</div></div></div>
+        <div style="display:flex;gap:24px;align-items:flex-start;"><div style="font-family:'Fraunces',serif;font-size:54px;color:var(--accent);font-weight:500;line-height:1;min-width:70px;">02</div><div><div style="font-family:'Fraunces',serif;font-size:32px;color:#fff;font-weight:500;line-height:1.2;">Modelo de valoración integral en Excel</div><div style="font-size:20px;color:#9DB8D6;margin-top:8px;line-height:1.45;">Proyección de flujos, descuento al WACC, valor terminal, sensibilidad, ajustes — y reconciliación con múltiplos. Listo para sustentar una decisión de inversión real.</div></div></div>
+        <div style="display:flex;gap:24px;align-items:flex-start;"><div style="font-family:'Fraunces',serif;font-size:54px;color:var(--accent);font-weight:500;line-height:1;min-width:70px;">03</div><div><div style="font-family:'Fraunces',serif;font-size:32px;color:#fff;font-weight:500;line-height:1.2;">El lenguaje del CFO</div><div style="font-size:20px;color:#9DB8D6;margin-top:8px;line-height:1.45;">WACC, FCL, EVA, MM, tax shield, distress costs, signaling, payout policy, terminal value. El vocabulario que se habla en juntas directivas, comités de inversión y reuniones con inversionistas.</div></div></div>
+      </div>
+      <div style="background:rgba(255,255,255,.05);border-left:4px solid var(--accent);padding:32px 36px;">
+        <div class="t-eyebrow" style="color:var(--accent-soft);">Información del curso</div>
+        <div style="font-family:'Fraunces',serif;font-size:26px;color:#fff;margin-top:14px;line-height:1.4;">Financial Management</div>
+        <div style="font-size:18px;color:#9DB8D6;margin-top:4px;">MBA · 6 días · 4 horas/día · 24 horas totales</div>
+        <div style="font-family:'Fraunces',serif;font-size:26px;color:#fff;margin-top:24px;line-height:1.4;">Profesor</div>
+        <div style="font-size:18px;color:#9DB8D6;margin-top:4px;">Diego A. Restrepo-Tobón</div>
+        <div style="font-size:16px;color:#9DB8D6;margin-top:2px;">Escuela de Finanzas, Economía y Gobierno</div>
+        <a href="https://www.linkedin.com/in/diegorestrepotobon/" style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent-soft);text-decoration:none;letter-spacing:.06em;margin-top:10px;display:inline-block;">linkedin.com/in/diegorestrepotobon</a>
+        <div style="margin-top:24px;padding-top:24px;border-top:1px solid rgba(255,255,255,.15);"><div class="t-eyebrow" style="color:var(--accent-soft);font-size:14px;">Prerrequisitos</div><div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:#fff;margin-top:6px;line-height:1.4;">Nivelatorios MBA</div></div>
+      </div>
+    </div>
+    <div style="margin-top:32px;padding-top:28px;border-top:1px solid rgba(255,255,255,.18);margin-bottom:24px;"><div style="font-family:'Fraunces',serif;font-size:42px;color:#fff;font-weight:500;line-height:1.25;max-width:1500px;">"En finanzas corporativas, la respuesta correcta nunca es un número solo. <span style="color:var(--accent);">Es un número, un rango, y un argumento.</span>"</div></div>
+    <div class="foot"><span>Financial Management — MBA · EAFIT · 2026</span><span>19 / 19</span></div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+  const stage = document.getElementById('stage');
+
+  function fitStage(){
+    const scale = Math.min(window.innerWidth/1920, window.innerHeight/1080);
+    stage.style.transform = `scale(${scale})`;
+  }
+  function show(i){
+    if(i<0) i=0;
+    if(i>=total) i=total-1;
+    current = i;
+    slides.forEach((s,idx)=>s.classList.toggle('active', idx===current));
+  }
+  document.getElementById('zoneLeft').addEventListener('click', ()=>show(current-1));
+  document.getElementById('zoneRight').addEventListener('click', ()=>show(current+1));
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ e.preventDefault(); show(current+1); }
+    else if(e.key==='ArrowLeft' || e.key==='PageUp'){ e.preventDefault(); show(current-1); }
+    else if(e.key==='Home'){ e.preventDefault(); show(0); }
+    else if(e.key==='End'){ e.preventDefault(); show(total-1); }
+  });
+  window.addEventListener('resize', fitStage);
+  fitStage();
+  show(0);
+})();
+</script>
+</body>
+</html>
